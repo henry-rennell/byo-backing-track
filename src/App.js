@@ -5,13 +5,12 @@ import Keyboard from "./components/Keyboard"
 import Controls from './Controls';
 
 function App() {
-  const [isRecording, setIsRecording] = useState(false)
-  const [recording, setRecording] = useState([])
+  const [keysPressed, setKeysPressed] = useState([])
 
   return (
     <div className="App">
       <Heading />
-      <Keyboard />
+      <Keyboard keysPressed={keysPressed} setKeysPressed={setKeysPressed}/>
     </div>
   );
 }

@@ -18,3 +18,13 @@
     text-align: center;
     z-index: 1;
 }
+
+.pressed {
+    background-color: lightgray;
+}
+
+.key {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

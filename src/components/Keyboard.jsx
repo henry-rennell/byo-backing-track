@@ -60,25 +60,31 @@ const notes = [
       m: B
   }
 
-export default function Keyboard () {
-    const [recording, setRecording] = useState([])
+export default function Keyboard ({ keysPressed, setKeysPressed,}) {
+
 
     const handleKeyDown = e => {
         if(e.repeat) {
             return;
         }
         if(Sounds[e.key]) {
+            //playing the corresponding sound to the key pressed
             Sounds[e.key].play();
+            //updating keys Pressed state
+            setKeysPressed([...keysPressed, `${e.key}`])
         }
     }
 
     const handleKeyUp = e => {
         if(Sounds[e.key]) {
-            Sounds[e.key].pause();
-            Sounds[e.key].currentTime = 0;
+            let keysPressedCopy = keysPressed.splice(keysPressed.indexOf(`${e.key}`), 1);
+            setKeysPressed(keysPressedCopy)
+            setTimeout(() => {
+                Sounds[e.key].pause();
+                Sounds[e.key].currentTime = 0;
+            }, 100)
         }
     }
-
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)
@@ -88,7 +94,7 @@ export default function Keyboard () {
 
     return  (
         <div className="keyboard">
-            {notes.map((note, index) => { return <Key key={index} note={note} index={index} /> })}
+            {notes.map((note, index) => { return <Key key={index} note={note} index={index} keysPressed={keysPressed}/> })}
         </div>
     )
 }

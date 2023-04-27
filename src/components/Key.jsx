@@ -4,7 +4,7 @@ import "./Key.css"
 
 
 
-export default function Key ({ note, index }) {
+export default function Key ({ note, index, keysPressed }) {
     let keyToNote = {
         0: 'z',
         1: 's',
@@ -21,6 +21,8 @@ export default function Key ({ note, index }) {
     }
 
     return(
-        <div className={"key" + (note.isFlat? " black" : " white")}>{note.note} {keyToNote[index]}</div>
+        <div className={"key" + (note.isFlat? " black" : " white") + (keysPressed.includes(keyToNote[index])? " pressed" : "")}>
+            <span>{note.note}</span><span className="control">{keyToNote[index]}</span>
+        </div>
     )
 }
