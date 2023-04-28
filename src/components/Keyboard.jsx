@@ -42,8 +42,6 @@ const notes = [
   let A = new Audio(a)
   let Bb = new Audio(bb)
   let B = new Audio(b)
-
-
   
   let Sounds = {
       z: C, 
@@ -60,39 +58,43 @@ const notes = [
       m: B
   }
 
-export default function Keyboard ({ keysPressed, setKeysPressed,}) {
-
-
+export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime }) {
+    
+    
     const handleKeyDown = e => {
-        if(e.repeat) {
-            return;
-        }
-        if(Sounds[e.key]) {
-            //playing the corresponding sound to the key pressed
-            Sounds[e.key].play();
-            //updating keys Pressed state
-            setKeysPressed([...keysPressed, `${e.key}`])
-        }
+            if(e.repeat) {
+                return;
+            }
+            if(Sounds[e.key]) {
+                let start = Date.now()
+                //playing the corresponding sound to the key pressed
+                Sounds[e.key].play();
+                //updating keysPressed state
+                setKeysPressed(prevKeysPressed => [...prevKeysPressed, e.key])
+                setRecording(prevRecording => [...prevRecording, {key: `${e.key}`, start, duration: 0 }] );
+            }
     }
 
     const handleKeyUp = e => {
-        if(Sounds[e.key]) {
-            let keysPressedCopy = keysPressed.splice(keysPressed.indexOf(`${e.key}`), 1);
-            setKeysPressed(keysPressedCopy)
-            setTimeout(() => {
-                Sounds[e.key].pause();
-                Sounds[e.key].currentTime = 0;
-            }, 100)
-        }
+            if(Sounds[e.key]) {
+                let stop = Date.now();
+                let keysPressedCopy = [...keysPressed];
+                keysPressedCopy.splice(keysPressed.indexOf(`${e.key}`), 1)
+                setKeysPressed(keysPressedCopy)
+                setReleaseTime(prevReleaseTimes => [...prevReleaseTimes, {key: e.key, stop, }])
+                setTimeout(() => {
+                    Sounds[e.key].pause();
+                    Sounds[e.key].currentTime = 0;
+                }, 100)
+            }
     }
-    
+
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)
         window.addEventListener('keyup', handleKeyUp)
     }, [])
 
-
-    return  (
+    return (
         <div className="keyboard">
             {notes.map((note, index) => { return <Key key={index} note={note} index={index} keysPressed={keysPressed}/> })}
         </div>
