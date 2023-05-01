@@ -12,6 +12,7 @@ function App() {
   const [compiledRecording, setCompiledRecording] = useState([])
   const [releaseTime, setReleaseTime] = useState([])
 
+
   const handleCompile = () => {
     setIsRecording(!isRecording)
     setCompiledRecording(CompileRecording(recording, releaseTime))
@@ -38,6 +39,7 @@ function App() {
         setIsRecording={setIsRecording} 
         releaseTime={releaseTime} 
         setReleaseTime={setReleaseTime}
+        compiledRecording={compiledRecording}
       />
 
       <button onClick={handleCompile}>Compile Your Recording</button>

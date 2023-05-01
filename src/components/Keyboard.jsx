@@ -1,6 +1,9 @@
 import "./Keyboard.css"
 import Key from "./Key"
 import { useEffect, useState } from "react"
+import PlayBack from "../functions/Playback"
+import notes from "../constants/Notes"
+import devTest from "../notes/Sounds"
 import c from "../notes/C.mp3"
 import db from "../notes/Db.mp3"
 import d from "../notes/D.mp3"
@@ -13,62 +16,74 @@ import ab from "../notes/Ab.mp3"
 import a from "../notes/A.mp3"
 import bb from "../notes/Bb.mp3"
 import b from "../notes/B.mp3"
+import c2 from "../notes/C2.mp3"
+import db2 from "../notes/Db2.mp3"
+import d2 from "../notes/D2.mp3"
+import eb2 from "../notes/Eb2.mp3"
+import e2 from "../notes/E2.mp3"
+import f2 from "../notes/F2.mp3"
 
-
-const notes = [
-    { note: "C", isFlat: false },
-    { note: "Db", isFlat: true },
-    { note: "D", isFlat: false },
-    { note: "Eb", isFlat: true },
-    { note: "E", isFlat: false },
-    { note: "F", isFlat: false },
-    { note: "Gb", isFlat: true },
-    { note: "G", isFlat: false },
-    { note: "Ab", isFlat: true },
-    { note: "A", isFlat: false },
-    { note: "Bb", isFlat: true },
-    { note: "B", isFlat: false },
-  ]
+let C = new Audio(c)
+let Db = new Audio(db)
+let D = new Audio(d)
+let Eb = new Audio(eb)
+let E = new Audio(e)
+let F = new Audio(f)
+let Gb = new Audio(gb)
+let G = new Audio(g)
+let Ab = new Audio(ab)
+let A = new Audio(a)
+let Bb = new Audio(bb)
+let B = new Audio(b)
+let C2 = new Audio(c2)
+let Db2 = new Audio(db2)
+let D2 = new Audio(d2)
+let Eb2 = new Audio(eb2)
+let E2 = new Audio(e2)
+let F2 = new Audio(f2)
   
-  let C = new Audio(c)
-  let Db = new Audio(db)
-  let D = new Audio(d)
-  let Eb = new Audio(eb)
-  let E = new Audio(e)
-  let F = new Audio(f)
-  let Gb = new Audio(gb)
-  let G = new Audio(g)
-  let Ab = new Audio(ab)
-  let A = new Audio(a)
-  let Bb = new Audio(bb)
-  let B = new Audio(b)
-  
-  let Sounds = {
-      z: C, 
-      s: Db,
-      x: D,
-      d: Eb,
-      c: E,
-      v: F,
-      g: Gb, 
-      b: G,
-      h: Ab,
-      n: A,
-      j: Bb,
-      m: B
-  }
+let keysToSounds = {
+    a: C, 
+    w: Db,
+    s: D,
+    e: Eb,
+    d: E,
+    f: F,
+    t: Gb, 
+    g: G,
+    y: Ab,
+    h: A,
+    u: Bb,
+    j: B,
+    k: C2,
+    o: Db2,
+    l: D2,
+    p: Eb2,
+    ";": E2,
+    "'": F2
+}
 
-export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime }) {
+
+
+export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime, compiledRecording}) {
+    const [isPlaying, setIsPlaying] = useState(false)
+
+
+    const handlePlay = () => {
+        setIsPlaying(!isPlaying)
+        PlayBack(compiledRecording)
+
+    }
     
     
     const handleKeyDown = e => {
             if(e.repeat) {
                 return;
             }
-            if(Sounds[e.key]) {
-                let start = Date.now()
+            if(keysToSounds[e.key]) {
+                let start = performance.now()
                 //playing the corresponding sound to the key pressed
-                Sounds[e.key].play();
+                keysToSounds[e.key].play();
                 //updating keysPressed state
                 setKeysPressed(prevKeysPressed => [...prevKeysPressed, e.key])
                 setRecording(prevRecording => [...prevRecording, {key: `${e.key}`, start, duration: 0 }] );
@@ -76,16 +91,22 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, s
     }
 
     const handleKeyUp = e => {
-            if(Sounds[e.key]) {
-                let stop = Date.now();
-                let keysPressedCopy = [...keysPressed];
-                keysPressedCopy.splice(keysPressed.indexOf(`${e.key}`), 1)
-                setKeysPressed(keysPressedCopy)
-                setReleaseTime(prevReleaseTimes => [...prevReleaseTimes, {key: e.key, stop, }])
+            if(keysToSounds[e.key]) {
+                //getting the exact time of key up
+                let keyUpTime = performance.now();
+                //creating a copy of keys pressed state in order to modify it
+                let newKeysPressed = [...keysPressed];
+                //removing key after it is released
+                newKeysPressed.splice(keysPressed.indexOf(`${e.key}`), 1)
+                //setting new KeysPressed State
+                setKeysPressed(newKeysPressed)
+                //adding newly released key to state with its time of release.
+                setReleaseTime(prevReleaseTimes => [...prevReleaseTimes, {key: e.key, stop: keyUpTime, }])
+                //timer to pause the sound -> (25ms delay for a bit smoother sound)
                 setTimeout(() => {
-                    Sounds[e.key].pause();
-                    Sounds[e.key].currentTime = 0;
-                }, 100)
+                    keysToSounds[e.key].pause();
+                    keysToSounds[e.key].currentTime = 0;
+                }, 25)
             }
     }
 
@@ -95,8 +116,12 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, s
     }, [])
 
     return (
+        <section>
         <div className="keyboard">
             {notes.map((note, index) => { return <Key key={index} note={note} index={index} keysPressed={keysPressed}/> })}
         </div>
+        <button onClick={handlePlay}>Play</button>
+        <button onClick={() => PlayBack(devTest)}>DEV MODE</button>
+        </section>
     )
 }
