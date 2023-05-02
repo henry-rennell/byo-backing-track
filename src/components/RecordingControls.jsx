@@ -1,13 +1,13 @@
-import CompileRecording from "../functions/CompileRecording"
 import "./RecordingControls.css"
 
-export default function RecordingControls({setCompiledRecording, setRecording, recording, setReleaseTime, releaseTime, compiledRecording, isPlaying }) {
+export default function RecordingControls({setCompiledRecording, setRecording, recording, setReleaseTime, compiledRecording, isPlaying }) {
     let isSetButton = compiledRecording.length === 0; 
     let isResetButton = !isPlaying
     
     const handleCompile = () => {
         if(compiledRecording.length === 0) {
-        setCompiledRecording(CompileRecording(recording, releaseTime))
+            let clean = recording.filter(note => note.duration !== 0)
+        setCompiledRecording(clean)
         }
     }
 

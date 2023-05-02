@@ -10,11 +10,14 @@ export default function Controls({ setIsPlaying, isPlaying, compiledRecording, }
 
     const handlePlay = () => {
         setIsPlaying(true)
-        let recordingDuration = compiledRecording[compiledRecording.length-1].stop - compiledRecording[0].start;
+        let finishes = compiledRecording.map(note => {
+            return note.stop
+        })
+        let lastNoteToEnd = Math.max(...finishes) - compiledRecording[0].start
         PlayBack(compiledRecording)
         loop = setInterval(() => {
             PlayBack(compiledRecording) 
-        }, recordingDuration + 10)
+        }, lastNoteToEnd + 10)
     }
     const handlePause = () => {
         setIsPlaying(false)

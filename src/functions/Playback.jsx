@@ -74,6 +74,6 @@ export default async function PlayBack(compiledAudio) {
       let stopTimeout = setTimeout(() => {
             sound.currentTime = 0;
             sound.pause();
-      }, difference + keystroke.duration + 25);
+      }, keystroke.stop - startTime);
     });
   }

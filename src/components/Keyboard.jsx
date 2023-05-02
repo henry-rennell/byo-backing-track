@@ -1,6 +1,6 @@
 import "./Keyboard.css"
 import Key from "./Key"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import notes from "../constants/Notes"
 import c from "../notes/C.mp3"
 import db from "../notes/Db.mp3"
@@ -61,7 +61,7 @@ let keysToSounds = {
     "'": F2
 }
 
-export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime,}) {
+export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, }) {
 
     const handleKeyDown = e => {
         if(e.repeat) {
@@ -78,23 +78,33 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, s
     }
 
     const handleKeyUp = e => {
-        let keyUpTime = performance.now();
-            if(keysToSounds[e.key]) {
-                //getting the exact time of key up
-                //creating a copy of keys pressed state in order to modify it
-                let newKeysPressed = [...keysPressed];
-                //removing key after it is released
-                newKeysPressed.splice(keysPressed.indexOf(`${e.key}`), 1)
-                //setting new KeysPressed State
-                setKeysPressed(newKeysPressed)
-                //adding newly released key to state with its time of release.
-                setReleaseTime(prevReleaseTimes => [...prevReleaseTimes, {key: e.key, stop: keyUpTime, }])
-                //timer to pause the sound -> (25ms delay for a bit smoother sound)
-                setTimeout(() => {
-                    keysToSounds[e.key].pause();
-                    keysToSounds[e.key].currentTime = 0;
-                }, 25)
-            }
+        if (keysToSounds[e.key]) {
+            //handling the removal of keys no longer being pressed
+            let keysPressedCopy = [...keysPressed];
+            keysPressedCopy.splice(keysPressed.indexOf(`${e.key}`), 1);
+            setKeysPressed(keysPressedCopy);
+            setRecording(prevRecording => {
+                //initialising time for the keyUp 
+              let keyUpTime = performance.now();
+              const recordingCopy = [...prevRecording];
+                //looking for the keyDown Event that corresponds to our keyUp
+              const target = recordingCopy.findIndex(
+                keyDown => keyDown.key === e.key && keyDown.duration === 0
+              );
+                //if the target note is in the keydown array
+              if (target !== -1) {
+                //setting the duration as the time released - the time the target was pressed down
+                recordingCopy[target].duration = keyUpTime - recordingCopy[target].start;
+                //settting the stop time
+                recordingCopy[target].stop = keyUpTime;
+              }
+              return recordingCopy;
+            });
+            setTimeout(() => {
+              keysToSounds[e.key].pause();
+              keysToSounds[e.key].currentTime = 0;
+            }, 25);
+        }
     }
 
     useEffect(() => {
