@@ -1,0 +1,16 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+    width:100%;
+    margin: auto;
+    background-color: Rgb(63, 63, 64);
+    padding: 1%;
+    border: 4px outset black;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}

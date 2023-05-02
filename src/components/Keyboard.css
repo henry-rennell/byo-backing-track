@@ -8,9 +8,9 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    width: 90%;
-    min-width: 850px;
+    max-width: 850px;
     margin: auto;
+    margin-bottom: 1%;
 }
 
 

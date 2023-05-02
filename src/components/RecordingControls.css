@@ -1,0 +1,24 @@
+.recording {
+    text-align: center;
+}
+.recording-btns {
+    display: flex;
+}
+
+.recording-btns div {
+    cursor: pointer;
+    text-align: center;
+    border: 4px solid gray;
+    padding: 5%;
+    width: 100%;
+    background-color: lightgray;
+    border-radius: 20px;
+}
+
+.recording-btns .disabled {
+    color: grey;
+}
+
+.recording-btns .enabled {
+    color: black;
+}

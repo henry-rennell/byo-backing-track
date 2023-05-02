@@ -58,28 +58,22 @@ let Sounds = {
 }
 
 
-export default function PlayBack(compiledAudio) {
-    
-
+export default async function PlayBack(compiledAudio) {
+      let startTime = compiledAudio[0].start;
     compiledAudio.forEach((keystroke, idx) => {
       let sound = Sounds[keystroke.key];
+      sound.preload = 'auto'
       //the playback is based on the initial note
-      let startTime = compiledAudio[0].start;
       //difference is the gap between the start of the song and when this particular note starts
       let difference = keystroke.start - startTime
       //setting a timer to play the note after the note is due to start
       let startTimeout = setTimeout(() => {
             sound.play();
       }, difference);
-      //when the note is finished being played ( +50ms for smoothness)
+      //pausing sound / setting time to 0
       let stopTimeout = setTimeout(() => {
-            sound.pause();
             sound.currentTime = 0;
-      }, (keystroke.start - startTime) + keystroke.duration + 50);
-      //clearing the timers after the last note is finished
-      setTimeout(() => {
-        clearTimeout(startTimeout);
-        clearTimeout(stopTimeout);
-      }, compiledAudio[compiledAudio.length -1].stop - startTime);
+            sound.pause();
+      }, difference + keystroke.duration + 25);
     });
   }

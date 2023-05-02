@@ -1,9 +1,7 @@
 import "./Keyboard.css"
 import Key from "./Key"
 import { useEffect, useState } from "react"
-import PlayBack from "../functions/Playback"
 import notes from "../constants/Notes"
-import devTest from "../notes/Sounds"
 import c from "../notes/C.mp3"
 import db from "../notes/Db.mp3"
 import d from "../notes/D.mp3"
@@ -63,37 +61,26 @@ let keysToSounds = {
     "'": F2
 }
 
+export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime,}) {
 
-
-export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, setReleaseTime, compiledRecording}) {
-    const [isPlaying, setIsPlaying] = useState(false)
-
-
-    const handlePlay = () => {
-        setIsPlaying(!isPlaying)
-        PlayBack(compiledRecording)
-
-    }
-    
-    
     const handleKeyDown = e => {
-            if(e.repeat) {
-                return;
-            }
-            if(keysToSounds[e.key]) {
-                let start = performance.now()
-                //playing the corresponding sound to the key pressed
-                keysToSounds[e.key].play();
-                //updating keysPressed state
-                setKeysPressed(prevKeysPressed => [...prevKeysPressed, e.key])
-                setRecording(prevRecording => [...prevRecording, {key: `${e.key}`, start, duration: 0 }] );
-            }
+        if(e.repeat) {
+            return
+        }
+        if(keysToSounds[e.key]) {
+            setKeysPressed(prevKeysPressed => [...prevKeysPressed, e.key])
+            let start = performance.now()
+            //playing the corresponding sound to the key pressed
+            keysToSounds[e.key].play();
+            //updating keysPressed state
+            setRecording(prevRecording => [...prevRecording, {key: `${e.key}`, start, duration: 0 }] );
+        }
     }
 
     const handleKeyUp = e => {
+        let keyUpTime = performance.now();
             if(keysToSounds[e.key]) {
                 //getting the exact time of key up
-                let keyUpTime = performance.now();
                 //creating a copy of keys pressed state in order to modify it
                 let newKeysPressed = [...keysPressed];
                 //removing key after it is released
@@ -116,12 +103,8 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, s
     }, [])
 
     return (
-        <section>
         <div className="keyboard">
             {notes.map((note, index) => { return <Key key={index} note={note} index={index} keysPressed={keysPressed}/> })}
         </div>
-        <button onClick={handlePlay}>Play</button>
-        <button onClick={() => PlayBack(devTest)}>DEV MODE</button>
-        </section>
     )
 }

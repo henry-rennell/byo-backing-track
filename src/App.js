@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Heading from "./components/Heading"
 import Keyboard from "./components/Keyboard"
-import Controls from './Controls';
+import Controls from './components/Controls';
 import CompileRecording from './functions/CompileRecording';
+import RecordingControls from './components/RecordingControls';
 
 function App() {
   const [keysPressed, setKeysPressed] = useState([])
@@ -11,15 +12,19 @@ function App() {
   const [isRecording, setIsRecording] = useState(false)
   const [compiledRecording, setCompiledRecording] = useState([])
   const [releaseTime, setReleaseTime] = useState([])
+  const [isPlaying, setIsPlaying] = useState(false)
 
 
   const handleCompile = () => {
-    setIsRecording(!isRecording)
-    setCompiledRecording(CompileRecording(recording, releaseTime))
+    if(compiledRecording.length === 0) {
+      setCompiledRecording(CompileRecording(recording, releaseTime))
+    }
   }
+
   const handleReset = () => {
     setRecording([])
     setReleaseTime([])
+    setCompiledRecording([])
   }
 
   useEffect(()=> {
@@ -29,7 +34,6 @@ function App() {
   return (
     <div className="App">
       <Heading />
-
       <Keyboard 
         keysPressed={keysPressed} 
         setKeysPressed={setKeysPressed} 
@@ -40,10 +44,25 @@ function App() {
         releaseTime={releaseTime} 
         setReleaseTime={setReleaseTime}
         compiledRecording={compiledRecording}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
       />
-
-      <button onClick={handleCompile}>Compile Your Recording</button>
-      <button onClick={handleReset}>Reset Recording</button>
+      <div className="controls">
+        <Controls 
+          isPlaying={isPlaying} 
+          setIsPlaying={setIsPlaying} 
+          compiledRecording={compiledRecording} 
+        />
+        <RecordingControls 
+          setCompiledRecording={setCompiledRecording}
+          setRecording={setRecording}
+          recording={recording}
+          setReleaseTime={setReleaseTime}
+          releaseTime={releaseTime}
+          compiledRecording={compiledRecording}
+          isPlaying={isPlaying}
+        />
+      </div>
     </div>
   );
 }

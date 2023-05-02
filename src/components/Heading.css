@@ -1,0 +1,33 @@
+.heading * {
+    text-align: center;
+    color: lightgray;
+}
+
+.heading .headings {
+    background-color: darkgray;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 0%;
+    border: 4px outset gray;
+    background-color: Rgb(63, 63, 64);
+}
+.heading h1 {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    color: white;
+    font-size: 2.5em;
+}
+
+.heading ul {
+    margin-bottom: 5%;
+    list-style-type: none;
+}
+
+.heading li {
+    margin-bottom: 2%;
+}
+
+.heading .red {
+    color: black;
+    font-weight: bolder;
+}

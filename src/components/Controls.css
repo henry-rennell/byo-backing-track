@@ -1,0 +1,22 @@
+
+.play-pause {
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.play-btn, .pause-btn {
+    text-align: center;
+    padding: 20%;
+    border: 4px outset darkgray;
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.play-pause .disabled {
+    color: grey;
+}
+
+.play-pause .enabled {
+    color: black;
+}
