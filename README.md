@@ -1,6 +1,9 @@
 # BYO Backing Track
 ## Created By Henry Rennell
 
+### check the project out:
+[Link](https://henry-rennell.github.io/byo-backing-track/)
+
 ![Screenshot](public/screenshot.png)
 
 ## The Idea
