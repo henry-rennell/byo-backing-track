@@ -13,7 +13,6 @@ export default function RecordingControls({setCompiledRecording, setRecording, r
 
     const handleReset = () => {
         setRecording([])
-        setReleaseTime([])
         setCompiledRecording([])
     }
 

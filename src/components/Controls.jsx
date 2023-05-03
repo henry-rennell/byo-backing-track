@@ -30,7 +30,7 @@ export default function Controls({ setIsPlaying, isPlaying, compiledRecording, }
                 <div 
                     className={"play-btn" + (isPlayBtn? " enabled" : " disabled")} 
                     onClick={isPlayBtn? handlePlay : null}>
-                    Play
+                {isPlaying? "Playing" : "Play"}
                 </div>
 
                 <div className={"pause-btn" + (isPauseBtn? " enabled" : " disabled")} onClick={isPauseBtn? handlePause : null}>

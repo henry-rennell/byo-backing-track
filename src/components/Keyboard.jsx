@@ -71,6 +71,9 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, }
             setKeysPressed(prevKeysPressed => [...prevKeysPressed, e.key])
             let start = performance.now()
             //playing the corresponding sound to the key pressed
+            if(keysToSounds[e.key].currentTime > 0) {
+              return;
+            }
             keysToSounds[e.key].play();
             //updating keysPressed state
             setRecording(prevRecording => [...prevRecording, {key: `${e.key}`, start, duration: 0 }] );
@@ -108,6 +111,7 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, }
     }
 
     useEffect(() => {
+
         window.addEventListener('keydown', handleKeyDown)
         window.addEventListener('keyup', handleKeyUp)
     }, [])
