@@ -114,6 +114,11 @@ export default function Keyboard ({ keysPressed, setKeysPressed, setRecording, }
 
         window.addEventListener('keydown', handleKeyDown)
         window.addEventListener('keyup', handleKeyUp)
+
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown)
+          window.removeEventListener('keyup', handleKeyUp)
+      }
     }, [])
 
     return (
